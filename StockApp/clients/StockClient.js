@@ -1,7 +1,7 @@
-
-
 import RestClient from 'react-native-rest-client';
- 
+
+// Client that is based off of this API
+// https://iexcloud.io/docs/api/#key-stats
 export default class StockClient extends RestClient {
     
     constructor() {
