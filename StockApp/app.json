@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Stock App",
-    "slug": "StockApp",
+    "name": "Stock Analytics",
+    "slug": "StockAnalytics",
     "privacy": "public",
     "sdkVersion": "33.0.0",
     "platforms": [

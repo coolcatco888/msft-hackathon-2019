@@ -2,13 +2,15 @@ import React, { Component } from 'react';
 import { Button, StyleSheet, View, FlatList } from 'react-native';
 import { SearchBar, ListItem } from 'react-native-elements';
 import StockClient from '../clients/StockClient';
+import StockWatchClient from '../clients/StockWatchClient';
 
 // This class is the main screen
 const stockClient = new StockClient();
+const stockWatchClient = new StockWatchClient();
 
 export default class Main extends Component {
     static navigationOptions = {
-        title: 'Stock Tracker - Search',
+        title: 'Stock Analytics - Search',
         headerStyle: {
             backgroundColor: '#349beb',
           },
@@ -53,6 +55,46 @@ export default class Main extends Component {
         }
     };
 
+
+
+    async addOrRemoveWatch(item, button) {
+        var isInWatch = stockWatchClient.isWatched(item.symbol);
+
+        if (isInWatch == true) {
+            stockWatchClient.removeWatch(item.symbol);
+            button.title = "Watch";
+        } else {
+            stockWatchClient.addWatch(item.symbol, item);
+            button.title = "Unwatch";
+        }
+    }
+
+    renderWatchButton(item) {
+        var button = (
+            <Button
+                title="Watch" />
+        );
+
+        // var button = new Button();
+
+        // Setup onpress
+        button.onPress = () => {
+            alert('Pressed! ' + item.symbol);
+            this.addOrRemoveWatch(item, button);
+        }
+
+        // Setup Title
+        stockWatchClient.isWatched(item.symbol).then(isWatched => {
+            if (isWatched == true) {
+                button.title = "Unwatch";
+            } else {
+                button.title = "Watch";
+            }
+        });
+
+        return button;
+    }
+
     // Render Main Screen
     render() {
         // Set search state
@@ -85,16 +127,10 @@ export default class Main extends Component {
                     <FlatList
                         data={this.state.stockList}
                         renderItem={({item}) => (
-                            <ListItem 
-                                title={item.symbol}
-                                subtitle={item.securityName} 
-                                rightElement={(
-                                    <Button 
-                                        style={MainStyles.navbutton}
-                                        onPress={() => {
-                                        }}
-                                        title="Watch" />
-                                )} />)}
+                        <ListItem 
+                            title={item.symbol}
+                            subtitle={item.securityName} 
+                            rightElement={this.renderWatchButton(item)} />)}
                         keyExtractor={item => item.symbol}
                     />
                 </View>
