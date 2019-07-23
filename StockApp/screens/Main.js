@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { Button, StyleSheet, Text, View, FlatList } from 'react-native';
-import { SearchBar } from 'react-native-elements';
+import { Button, StyleSheet, View, FlatList } from 'react-native';
+import { SearchBar, ListItem } from 'react-native-elements';
 import StockClient from '../clients/StockClient';
 
 // This class is the main screen
@@ -19,24 +19,34 @@ export default class Main extends Component {
         };
     }
 
+    // Updates the search
     updateSearch = search => {
         this.setState({
             loading: true,
             searchState: { search: search }
         });
-        stockClient.search(search).then(
-            (data) => {
-                if (search != null && search != '') {
+
+        // Performs REST API Stock Quote Search
+        if (search != null && search != '') {
+            stockClient.search(search).then(
+                (data) => {
                     this.setState({
                             loading: false,
                             stockList: data 
                         });
                 }
-            }
-        )
+            )
+        } else {
+            this.setState({
+                loading: false,
+                stockList: [] 
+            });
+        }
     };
 
+    // Render Main Screen
     render() {
+        // Set search state
         const { search } = this.state.searchState;
 
         return (
@@ -65,7 +75,10 @@ export default class Main extends Component {
                 <View style={MainStyles.stocklist}>
                     <FlatList
                         data={this.state.stockList}
-                        renderItem={({item}) => <Text>{item.symbol}</Text>}
+                        renderItem={({item}) => (
+                            <ListItem 
+                                title={item.symbol}
+                                subtitle={item.securityName} />)}
                         keyExtractor={item => item.symbol}
                     />
                 </View>
@@ -74,6 +87,7 @@ export default class Main extends Component {
     }
 }
 
+// Main Sheet
 const MainStyles = StyleSheet.create({
     container: {
         flex: 1,
