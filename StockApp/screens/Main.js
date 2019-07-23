@@ -40,19 +40,44 @@ export default class Main extends Component {
 
         // Performs REST API Stock Quote Search
         if (search != null && search != '') {
-            stockClient.search(search).then(
-                (data) => {
-                    this.setState({
-                            loading: false,
-                            stockList: data 
-                        });
-                }
-            )
+            if (this.state.mode == "Watching") {
+                // Filter on Watchlist
+                var watchList = stockWatchClient.getWatchList();
+                var filtered = [];
+                watchList.forEach(stock => {
+                    if (stock.symbol.toLowerCase().includes(search.toLowerCase()) || stock.securityName.toLowerCase().includes(search.toLowerCase())) {
+                        filtered.push(stock);
+                    }
+                });
+
+                // Update state
+                this.setState({
+                    loading: false,
+                    stockList: filtered 
+                });
+            } else {
+                // Search for stocks to add
+                stockClient.search(search).then(
+                    (data) => {
+                        this.setState({
+                                loading: false,
+                                stockList: data 
+                            });
+                    }
+                );
+            }
         } else {
-            this.setState({
-                loading: false,
-                stockList: [] 
-            });
+            if (this.state.mode == "Watching") {
+                this.setState({
+                    loading: false,
+                    stockList: stockWatchClient.getWatchList() 
+                });
+            } else {
+                this.setState({
+                    loading: false,
+                    stockList: [] 
+                });
+            }
         }
     };
 
@@ -77,8 +102,13 @@ export default class Main extends Component {
     renderWatchButton(item) {
         var button = (
             <Button
-                onPress={() => {
+                onPress={(ev) => {
                     var watched = this.addOrRemoveWatch(item);
+                    if (watched) {
+                        ev.target.title = "Unwatch";
+                    } else {
+                        ev.target.title = "Watch";
+                    }
                 }}
             title={stockWatchClient.getButtonText(item.symbol)} />
         );
