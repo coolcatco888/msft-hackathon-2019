@@ -4,52 +4,56 @@ import { AsyncStorage } from "react-native";
 // This persists the data to disk
 export default class StockWatchClient {
 
-    // add a watch
-    async addWatch(ticker, item) {
+    // constructor initialize
+    constructor() {
+        this.stockWatchList = {};
+
         try {
-            await AsyncStorage.setItem(ticker, JSON.stringify(item));
+            var keys = AsyncStorage.getAllKeys().then((foundKeys) => {
+                if (foundKeys != null) {
+                    foundKeys.forEach((key) => {
+                        // Parse and add items back to watchlist
+                        AsyncStorage.getItem(key).then(item => {
+                            this.stockWatchList[key] =  JSON.parse(item);
+                        });
+                    });
+                }
+            });
+        } catch (error) {
+            // Error retrieving from storage
+        }
+    }
+
+    // add a watch
+    addWatch(ticker, item) {
+        try {
+            this.stockWatchList[ticker] = item;
+            AsyncStorage.setItem(ticker, JSON.stringify(item));
         } catch (error) {
             // Error saving data
         }
     }
 
     // get a watch
-    async getWatch(ticker) {
-        try {
-            return await AsyncStorage.getItem(ticker);
-        } catch (error) {
-            // Error removing data
-            return null;
-        }
+    getWatch(ticker) {
+        return this.stockWatchList[ticker];
     }
 
     // Gets whether a stock is watched or not
-    async isWatched(ticker) {
-        return (await this.getWatch(ticker)) == null;
+    isWatched(ticker) {
+        return this.getWatch(ticker) != null;
     }
 
     // get watch list
-    async getWatchList() {
-        var watchList = [];
-        try {
-            var keys = await AsyncStorage.getAllKeys();
-            if (keys != null) {
-                keys.forEach((item) => {
-                    // Parse and add items back to watchlist
-                    watchList.push(JSON.parse(item));
-                });
-            }
-        } catch (error) {
-            // Error retrieving from storage
-        }
-
-        return watchList;
+    getWatchList() {
+        return Object.values(this.stockWatchList);
     }
 
     // remove watch
-    async removeWatch(ticker) {
+    removeWatch(ticker) {
         try {
-            await AsyncStorage.removeItem(ticker);
+            delete this.stockWatchList[ticker];
+            AsyncStorage.removeItem(ticker);
         } catch (error) {
             // Error removing data
         }

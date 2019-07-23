@@ -57,40 +57,33 @@ export default class Main extends Component {
 
 
 
-    async addOrRemoveWatch(item, button) {
+    addOrRemoveWatch(item) {
         var isInWatch = stockWatchClient.isWatched(item.symbol);
 
-        if (isInWatch == true) {
+        if (isInWatch) {
+            alert('Removed watch: ' + item.symbol);
             stockWatchClient.removeWatch(item.symbol);
-            button.title = "Watch";
         } else {
+            alert('Added watch: ' + item.symbol);
             stockWatchClient.addWatch(item.symbol, item);
-            button.title = "Unwatch";
         }
+
+        return isInWatch;
     }
 
-    renderWatchButton(item) {
+    renderWatchButton(item, title) {
         var button = (
             <Button
-                title="Watch" />
+                onPress={() => {
+                    var watched = this.addOrRemoveWatch(item);
+                    if (watched) {
+                        this.setState({ textValue: "Unwatch"});
+                    } else {
+                        this.setState({ textValue: "Watch"});
+                    }
+                }}
+            title={title} />
         );
-
-        // var button = new Button();
-
-        // Setup onpress
-        button.onPress = () => {
-            alert('Pressed! ' + item.symbol);
-            this.addOrRemoveWatch(item, button);
-        }
-
-        // Setup Title
-        stockWatchClient.isWatched(item.symbol).then(isWatched => {
-            if (isWatched == true) {
-                button.title = "Unwatch";
-            } else {
-                button.title = "Watch";
-            }
-        });
 
         return button;
     }
@@ -106,12 +99,20 @@ export default class Main extends Component {
                   <Button 
                     containerViewStyle={{width: '100%', marginLeft: 0}}
                     onPress={() => {
+                        this.setState({
+                            loading: false,
+                            stockList: [] 
+                        });
                     }}
                     title="Search"
                   />
                   <Button
                     containerViewStyle={{width: '100%', marginLeft: 0}}
                     onPress={() => {
+                        this.setState({
+                            loading: false,
+                            stockList: stockWatchClient.getWatchList() 
+                        });
                     }}
                     title="Watching"
                   />
@@ -130,7 +131,7 @@ export default class Main extends Component {
                         <ListItem 
                             title={item.symbol}
                             subtitle={item.securityName} 
-                            rightElement={this.renderWatchButton(item)} />)}
+                            rightElement={this.renderWatchButton(item, "Watch")} />)}
                         keyExtractor={item => item.symbol}
                     />
                 </View>
