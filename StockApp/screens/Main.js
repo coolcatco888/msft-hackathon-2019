@@ -9,15 +9,18 @@ const stockClient = new StockClient();
 const stockWatchClient = new StockWatchClient();
 
 export default class Main extends Component {
-    static navigationOptions = {
-        title: 'Stock Analytics - Search',
-        headerStyle: {
-            backgroundColor: '#349beb',
-          },
-          headerTintColor: '#fff',
-          headerTitleStyle: {
-            fontWeight: 'bold',
-          },
+    static navigationOptions =  ({ navigation }) => {
+        const { params } = navigation.state;
+        return {
+            title: params ? params.screenTitle: 'Stock Analytics - Search',
+            headerStyle: {
+                backgroundColor: '#349beb',
+            },
+            headerTintColor: '#fff',
+            headerTitleStyle: {
+                fontWeight: 'bold',
+            },
+        };
     };
     constructor() {
         super();
@@ -145,6 +148,7 @@ export default class Main extends Component {
                             mode: "Search",
                             stockList: [] 
                         });
+                        this.props.navigation.setParams({screenTitle: 'Stock Analytics - Search'});
                     }}
                     title="Search"
                   />
@@ -159,6 +163,7 @@ export default class Main extends Component {
                             mode: "Watching",
                             stockList: stockWatchClient.getWatchList() 
                         });
+                        this.props.navigation.setParams({screenTitle: 'Stock Analytics - Watching'});
                     }}
                     title="Watching"
                   />
