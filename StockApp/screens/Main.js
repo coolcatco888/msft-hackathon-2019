@@ -7,7 +7,16 @@ import StockClient from '../clients/StockClient';
 const stockClient = new StockClient();
 
 export default class Main extends Component {
-
+    static navigationOptions = {
+        title: 'Stock Tracker - Search',
+        headerStyle: {
+            backgroundColor: '#349beb',
+          },
+          headerTintColor: '#fff',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+          },
+    };
     constructor() {
         super();
         this.state = {
@@ -53,13 +62,13 @@ export default class Main extends Component {
             <View style={MainStyles.container}>
                 <View style={MainStyles.navbar}>
                   <Button 
-                    style={MainStyles.navbutton}
+                    containerViewStyle={{width: '100%', marginLeft: 0}}
                     onPress={() => {
                     }}
-                    title="Home"
+                    title="Search"
                   />
                   <Button
-                    style={MainStyles.navbutton}
+                    containerViewStyle={{width: '100%', marginLeft: 0}}
                     onPress={() => {
                     }}
                     title="Watching"
@@ -67,7 +76,7 @@ export default class Main extends Component {
                 </View>
                 <View style={MainStyles.searchbar}>
                     <SearchBar
-                        placeholder="Type Here..."
+                        placeholder="Search for stocks..."
                         onChangeText={this.updateSearch}
                         value={search}
                     />
@@ -78,7 +87,14 @@ export default class Main extends Component {
                         renderItem={({item}) => (
                             <ListItem 
                                 title={item.symbol}
-                                subtitle={item.securityName} />)}
+                                subtitle={item.securityName} 
+                                rightElement={(
+                                    <Button 
+                                        style={MainStyles.navbutton}
+                                        onPress={() => {
+                                        }}
+                                        title="Watch" />
+                                )} />)}
                         keyExtractor={item => item.symbol}
                     />
                 </View>
@@ -104,9 +120,7 @@ const MainStyles = StyleSheet.create({
         backgroundColor: '#dedede',
       },
       stocklist: {
-        flex: 5
-      },
-      navbutton: {
+        flex: 8
       }
   });
   
