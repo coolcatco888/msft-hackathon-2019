@@ -97,7 +97,13 @@ export default class Main extends Component {
         if (this.state.mode == "Watching") {
             this.setState({ stockList: stockWatchClient.getWatchList() })
         } else {
-            this.setState({ stockList: list });
+            // This is a really dumb hack to get the buttons to refresh
+            // Basically, we are setting rapidly so that the refresh will trigger
+            var refreshList = []
+            list.forEach(stock => {
+                refreshList.push(stock);
+                this.setState({ stockList: refreshList });
+            });
         }
 
         return isInWatch;
