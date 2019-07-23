@@ -44,6 +44,14 @@ export default class StockWatchClient {
         return this.getWatch(ticker) != null;
     }
 
+    getButtonText(ticker) {
+        if (this.isWatched(ticker)) {
+            return "Unwatch";
+        } else {
+            return "Watch";
+        }
+    }
+
     // get watch list
     getWatchList() {
         return Object.values(this.stockWatchList);

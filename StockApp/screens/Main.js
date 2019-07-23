@@ -25,6 +25,7 @@ export default class Main extends Component {
             searchState: {
                 search: ''
             },
+            mode: "Search",
             loading: false,
             stockList: []
         };
@@ -55,8 +56,6 @@ export default class Main extends Component {
         }
     };
 
-
-
     addOrRemoveWatch(item) {
         var isInWatch = stockWatchClient.isWatched(item.symbol);
 
@@ -68,21 +67,20 @@ export default class Main extends Component {
             stockWatchClient.addWatch(item.symbol, item);
         }
 
+        if (this.state.mode == "Watching") {
+            this.setState({ stockList: stockWatchClient.getWatchList() })
+        }
+
         return isInWatch;
     }
 
-    renderWatchButton(item, title) {
+    renderWatchButton(item) {
         var button = (
             <Button
                 onPress={() => {
                     var watched = this.addOrRemoveWatch(item);
-                    if (watched) {
-                        this.setState({ textValue: "Unwatch"});
-                    } else {
-                        this.setState({ textValue: "Watch"});
-                    }
                 }}
-            title={title} />
+            title={stockWatchClient.getButtonText(item.symbol)} />
         );
 
         return button;
@@ -100,7 +98,11 @@ export default class Main extends Component {
                     containerViewStyle={{width: '100%', marginLeft: 0}}
                     onPress={() => {
                         this.setState({
+                            searchState: {
+                                search: ''
+                            },
                             loading: false,
+                            mode: "Search",
                             stockList: [] 
                         });
                     }}
@@ -110,7 +112,11 @@ export default class Main extends Component {
                     containerViewStyle={{width: '100%', marginLeft: 0}}
                     onPress={() => {
                         this.setState({
+                            searchState: {
+                                search: ''
+                            },
                             loading: false,
+                            mode: "Watching",
                             stockList: stockWatchClient.getWatchList() 
                         });
                     }}
@@ -131,7 +137,7 @@ export default class Main extends Component {
                         <ListItem 
                             title={item.symbol}
                             subtitle={item.securityName} 
-                            rightElement={this.renderWatchButton(item, "Watch")} />)}
+                            rightElement={this.renderWatchButton(item)} />)}
                         keyExtractor={item => item.symbol}
                     />
                 </View>
