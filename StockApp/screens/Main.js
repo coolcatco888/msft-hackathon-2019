@@ -83,7 +83,9 @@ export default class Main extends Component {
 
     addOrRemoveWatch(item) {
         var isInWatch = stockWatchClient.isWatched(item.symbol);
-
+        var list = this.state.stockList;
+        
+        this.setState({ stockList: [] });
         if (isInWatch) {
             alert('Removed watch: ' + item.symbol);
             stockWatchClient.removeWatch(item.symbol);
@@ -94,6 +96,8 @@ export default class Main extends Component {
 
         if (this.state.mode == "Watching") {
             this.setState({ stockList: stockWatchClient.getWatchList() })
+        } else {
+            this.setState({ stockList: list });
         }
 
         return isInWatch;
