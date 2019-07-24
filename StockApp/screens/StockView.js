@@ -82,12 +82,12 @@ export default class StockViewScreen extends Component {
                             }]
                         }}
                         width={Dimensions.get('window').width} // from react-native
-                        height={220}
+                        height={200}
                         yAxisLabel={'$'}
                         chartConfig={{
-                            backgroundColor: '#e26a00',
-                            backgroundGradientFrom: '#fb8c00',
-                            backgroundGradientTo: '#ffa726',
+                            backgroundColor: '#474747',
+                            backgroundGradientFrom: '#1884d6',
+                            backgroundGradientTo: '#1062a1',
                             decimalPlaces: 2, // optional, defaults to 2dp
                             color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
                             style: {
@@ -99,9 +99,13 @@ export default class StockViewScreen extends Component {
                 <View style={StockViewStyles.navbar}>
                 </View>
                 <View style={StockViewStyles.stockInfo}>
-                <View style={StockViewStyles.stockInfoRow}>
-                    <Text style={StockViewStyles.colheader}>Symbol</Text>
+                    <View style={StockViewStyles.stockInfoRow}>
+                        <Text style={StockViewStyles.colheader}>Symbol</Text>
                         <Text style={StockViewStyles.coldata}>{this.state.ticker}</Text>
+                    </View>
+                    <View style={StockViewStyles.stockInfoRow}>
+                        <Text style={StockViewStyles.colheader}>Company Name</Text>
+                        <Text style={StockViewStyles.coldata}>{this.state.stats.companyName}</Text>
                     </View>
                     <View style={StockViewStyles.stockInfoRow}>
                         <Text style={StockViewStyles.colheader}>Price</Text>
@@ -135,7 +139,7 @@ const StockViewStyles = StyleSheet.create({
         flex: 1
       },
       chart: {
-        flex: 5
+        flex: 4
       },
       navbar: {
         flex: 1,
@@ -145,7 +149,7 @@ const StockViewStyles = StyleSheet.create({
         justifyContent: 'center'
       },
       stockInfo: {
-        flex: 6
+        flex: 7
       },
       stockInfoRow: {
         flex: 1,
