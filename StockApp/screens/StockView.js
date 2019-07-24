@@ -37,7 +37,28 @@ export default class StockViewScreen extends Component {
                 week52high: 0.0,
                 week52low: 0.0,
             },
-            chart: [],
+            chart: [
+                {
+                    date: "01-01-1970",
+                    close: 0.0
+                },
+                {
+                    date: "01-02-1970",
+                    close: 0.0
+                },
+                {
+                    date: "01-03-1970",
+                    close: 0.0
+                },
+                {
+                    date: "01-04-1970",
+                    close: 0.0
+                },
+                {
+                    date: "01-05-1970",
+                    close: 0.0
+                }
+            ],
         }
         var ticker = this.state.params.ticker;
         this.state.ticker = ticker;
@@ -55,16 +76,9 @@ export default class StockViewScreen extends Component {
                 <View style={StockViewStyles.chart}>
                     <LineChart
                         data={{
-                            labels: ['January', 'February', 'March', 'April', 'May', 'June'],
+                            labels: this.state.chart.map(x => x.date),
                             datasets: [{
-                            data: [
-                                Math.random() * 100,
-                                Math.random() * 100,
-                                Math.random() * 100,
-                                Math.random() * 100,
-                                Math.random() * 100,
-                                Math.random() * 100
-                            ]
+                                data: this.state.chart.map(x => x.close)
                             }]
                         }}
                         width={Dimensions.get('window').width} // from react-native
