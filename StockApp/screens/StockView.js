@@ -29,10 +29,17 @@ export default class StockViewScreen extends Component {
             params: props.navigation.state.params,
             ticker: 'MSFT',
             price: 0,
-            stats: [],
+            stats: {
+                companyName: '',
+                peRatio: 0.0,
+                week52change: 0.0,
+                week52high: 0.0,
+                week52low: 0.0,
+            },
             chart: [],
         }
         var ticker = this.state.params.ticker;
+        this.state.ticker = ticker;
         stockClient.getStockPrice(ticker).then((item) => this.setState({ price: item }));
         stockClient.getStockInfo(ticker).then((item) => this.setState({ stats: item }));
         stockClient.getStockPriceHistory(ticker, '1m').then((item) => this.setState({ chart: item }));
@@ -49,9 +56,29 @@ export default class StockViewScreen extends Component {
                 <View style={StockViewStyles.navbar}>
                 </View>
                 <View style={StockViewStyles.stockInfo}>
+                <View style={StockViewStyles.stockInfoRow}>
+                    <Text style={StockViewStyles.colheader}>Symbol</Text>
+                        <Text style={StockViewStyles.coldata}>{this.state.ticker}</Text>
+                    </View>
                     <View style={StockViewStyles.stockInfoRow}>
                         <Text style={StockViewStyles.colheader}>Price</Text>
                         <Text style={StockViewStyles.coldata}>{this.state.price}</Text>
+                    </View>
+                    <View style={StockViewStyles.stockInfoRow}>
+                        <Text style={StockViewStyles.colheader}>P/E Ratio</Text>
+                        <Text style={StockViewStyles.coldata}>{this.state.stats.peRatio}</Text>
+                    </View>
+                    <View style={StockViewStyles.stockInfoRow}>
+                        <Text style={StockViewStyles.colheader}>52 Week Change</Text>
+                        <Text style={StockViewStyles.coldata}>{this.state.stats.week52change}</Text>
+                    </View>
+                    <View style={StockViewStyles.stockInfoRow}>
+                        <Text style={StockViewStyles.colheader}>52 Week High</Text>
+                        <Text style={StockViewStyles.coldata}>{this.state.stats.week52high}</Text>
+                    </View>
+                    <View style={StockViewStyles.stockInfoRow}>
+                        <Text style={StockViewStyles.colheader}>52 Week Low</Text>
+                        <Text style={StockViewStyles.coldata}>{this.state.stats.week52low}</Text>
                     </View>
                 </View>
             </View>
@@ -79,12 +106,16 @@ const StockViewStyles = StyleSheet.create({
       },
       stockInfoRow: {
         flex: 1,
-        flexDirection: 'column'
+        flexDirection: 'row'
       },
       colheader: {
-        flex: 1
+        flex: 1,
+        fontWeight: 'bold',
+        fontSize: 20
       },
       coldata: {
-        flex: 1
+        flex: 1,
+        textAlign: 'right',
+        fontSize: 20
       }
   });
