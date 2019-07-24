@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Button, Text, StyleSheet, View, FlatList } from 'react-native';
+import { Button, Text, StyleSheet, View, Dimensions } from 'react-native';
+import { LineChart } from 'react-native-chart-kit'
 import { ListItem } from 'react-native-elements';
 import StockClient from '../clients/StockClient';
 import StockWatchClient from '../clients/StockWatchClient';
@@ -42,7 +43,7 @@ export default class StockViewScreen extends Component {
         this.state.ticker = ticker;
         stockClient.getStockPrice(ticker).then((item) => this.setState({ price: item }));
         stockClient.getStockInfo(ticker).then((item) => this.setState({ stats: item }));
-        stockClient.getStockPriceHistory(ticker, '1m').then((item) => this.setState({ chart: item }));
+        stockClient.getStockPriceHistory(ticker, '5d').then((item) => this.setState({ chart: item }));
     }
 
     render() {
@@ -52,6 +53,34 @@ export default class StockViewScreen extends Component {
         return (
             <View style={StockViewStyles.container}>
                 <View style={StockViewStyles.chart}>
+                    <LineChart
+                        data={{
+                            labels: ['January', 'February', 'March', 'April', 'May', 'June'],
+                            datasets: [{
+                            data: [
+                                Math.random() * 100,
+                                Math.random() * 100,
+                                Math.random() * 100,
+                                Math.random() * 100,
+                                Math.random() * 100,
+                                Math.random() * 100
+                            ]
+                            }]
+                        }}
+                        width={Dimensions.get('window').width} // from react-native
+                        height={220}
+                        yAxisLabel={'$'}
+                        chartConfig={{
+                            backgroundColor: '#e26a00',
+                            backgroundGradientFrom: '#fb8c00',
+                            backgroundGradientTo: '#ffa726',
+                            decimalPlaces: 2, // optional, defaults to 2dp
+                            color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                            style: {
+                            borderRadius: 16
+                            }
+                        }}
+                        />
                 </View>
                 <View style={StockViewStyles.navbar}>
                 </View>
