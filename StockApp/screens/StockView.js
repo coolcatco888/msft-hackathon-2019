@@ -117,7 +117,7 @@ export default class StockViewScreen extends Component {
                     </View>
                     <View style={StockViewStyles.stockInfoRow}>
                         <Text style={StockViewStyles.colheader}>52 Week Change</Text>
-                        <Text style={StockViewStyles.coldata}>{this.state.stats.week52change}</Text>
+                        <Text style={StockViewStyles.coldata}>{this.state.stats.week52change.toFixed(3)}</Text>
                     </View>
                     <View style={StockViewStyles.stockInfoRow}>
                         <Text style={StockViewStyles.colheader}>52 Week High</Text>
@@ -153,16 +153,21 @@ const StockViewStyles = StyleSheet.create({
       },
       stockInfoRow: {
         flex: 1,
-        flexDirection: 'row'
+        flexDirection: 'row',
+        padding: 8,
+        borderBottomColor: '#1062a1',
+        borderBottomWidth : 2
       },
       colheader: {
         flex: 1,
         fontWeight: 'bold',
-        fontSize: 20
+        fontSize: 20,
+        color: '#474747'
       },
       coldata: {
         flex: 1,
         textAlign: 'right',
-        fontSize: 20
+        fontSize: 20,
+        color: '#474747'
       }
   });
