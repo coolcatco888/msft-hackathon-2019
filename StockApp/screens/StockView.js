@@ -92,7 +92,7 @@ const StockViewStyles = StyleSheet.create({
         flex: 1
       },
       chart: {
-        flex: 3
+        flex: 5
       },
       navbar: {
         flex: 1,
@@ -102,7 +102,7 @@ const StockViewStyles = StyleSheet.create({
         justifyContent: 'center'
       },
       stockInfo: {
-        flex: 8
+        flex: 6
       },
       stockInfoRow: {
         flex: 1,
