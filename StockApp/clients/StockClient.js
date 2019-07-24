@@ -25,8 +25,8 @@ export default class StockClient extends RestClient {
     getStockPrice(ticker) {
         // If the request is successful, you can return the expected object
         // instead of the whole response.
-        return this.GET('/' + this.apiVersion + '/stock/' + ticker + '/price/?token=' + this.token)
-            .then(response => response);
+        return fetch('https://sandbox.iexapis.com/' + this.apiVersion + '/stock/' + ticker + '/price/?token=' + this.token)
+            .then(response => response.text().then((text) => text));
     }
 
     // Sample REST call

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, StyleSheet, View, FlatList } from 'react-native';
+import { Button, Text, StyleSheet, View, FlatList } from 'react-native';
 import { ListItem } from 'react-native-elements';
 import StockClient from '../clients/StockClient';
 import StockWatchClient from '../clients/StockWatchClient';
@@ -23,31 +23,24 @@ export default class StockViewScreen extends Component {
         };
     };
 
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
+            params: props.navigation.state.params,
             ticker: 'MSFT',
             price: 0,
             stats: [],
             chart: [],
-            
         }
-
+        var ticker = this.state.params.ticker;
+        stockClient.getStockPrice(ticker).then((item) => this.setState({ price: item }));
+        stockClient.getStockInfo(ticker).then((item) => this.setState({ stats: item }));
+        stockClient.getStockPriceHistory(ticker, '1m').then((item) => this.setState({ chart: item }));
     }
 
     render() {
         // Get stock stats
         const { navigation } = this.props;
-        var ticker = navigation.getParam('ticker', 'MSFT');
-        var price = stockClient.getStockPrice(ticker);
-        var stats = stockClient.getStockInfo(ticker);
-        var chart = stockClient.getStockPriceHistory(ticker, '1m');
-        this.state = {
-            ticker: ticker,
-            price: price,
-            stats: stats,
-            chart: chart
-        };
 
         return (
             <View style={StockViewStyles.container}>
@@ -56,24 +49,10 @@ export default class StockViewScreen extends Component {
                 <View style={StockViewStyles.navbar}>
                 </View>
                 <View style={StockViewStyles.stockInfo}>
-                    <View style={StockViewStyles.container}>
-                        <View style={StockViewStyles.coldata}>
-                        </View>
-                        <View style={StockViewStyles.coldata}>
-                        </View>
+                    <View style={StockViewStyles.stockInfoRow}>
+                        <Text style={StockViewStyles.colheader}>Price</Text>
+                        <Text style={StockViewStyles.coldata}>{this.state.price}</Text>
                     </View>
-                    <FlatList
-                        data={this.state.stockList}
-                        renderItem={({item}) => (
-                            <View style={StockViewStyles.container}>
-                                <View style={StockViewStyles.coldata}>
-                                </View>
-                                <View style={StockViewStyles.coldata}>
-                                </View>
-                            </View>)}
-                        keyExtractor={item => item.symbol}
-                    />
-
                 </View>
             </View>
             );
@@ -97,6 +76,13 @@ const StockViewStyles = StyleSheet.create({
       },
       stockInfo: {
         flex: 8
+      },
+      stockInfoRow: {
+        flex: 1,
+        flexDirection: 'column'
+      },
+      colheader: {
+        flex: 1
       },
       coldata: {
         flex: 1
