@@ -185,7 +185,7 @@ export default class MainScreen extends Component {
                             title={item.symbol}
                             subtitle={item.securityName}
                             onPress={() => {
-                                navigate('StockView', {name: item.symbol});
+                                navigate('StockView', { ticker: item.symbol});
                             }}
                             rightElement={this.renderWatchButton(item)} />)}
                         keyExtractor={item => item.symbol}
