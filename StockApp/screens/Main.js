@@ -4,11 +4,12 @@ import { SearchBar, ListItem } from 'react-native-elements';
 import StockClient from '../clients/StockClient';
 import StockWatchClient from '../clients/StockWatchClient';
 
-// This class is the main screen
+// Client Library
 const stockClient = new StockClient();
 const stockWatchClient = new StockWatchClient();
 
-export default class Main extends Component {
+// This class is the main screen
+export default class MainScreen extends Component {
     static navigationOptions =  ({ navigation }) => {
         const { params } = navigation.state;
         return {
@@ -132,7 +133,8 @@ export default class Main extends Component {
     // Render Main Screen
     render() {
         // Set search state
-        const { search } = this.state.searchState;
+        const {search} = this.state.searchState;
+        const {navigate} = this.props.navigation;
 
         return (
             <View style={MainStyles.container}>
@@ -181,7 +183,10 @@ export default class Main extends Component {
                         renderItem={({item}) => (
                         <ListItem 
                             title={item.symbol}
-                            subtitle={item.securityName} 
+                            subtitle={item.securityName}
+                            onPress={() => {
+                                navigate('StockView', {name: item.symbol});
+                            }}
                             rightElement={this.renderWatchButton(item)} />)}
                         keyExtractor={item => item.symbol}
                     />
